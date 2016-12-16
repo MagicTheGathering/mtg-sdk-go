@@ -7,14 +7,12 @@ import (
 
 func exampleFetchAllCards() {
 	log.Println("Fetching all cards with CMC >= 16")
-	cards, errors := mtg.NewQuery().CMC("gte16").All()
-
-	for card := range cards {
-		log.Println(card)
-	}
-
-	if err := <-errors; err != nil {
+	cards, err := mtg.NewQuery().CMC("gte16").All()
+	if err != nil {
 		log.Panic(err)
+	}
+	for _, card := range cards {
+		log.Println(card)
 	}
 }
 
@@ -84,7 +82,19 @@ func exampleGetTypes() {
 	}
 }
 
+func exampleQuerySets() {
+	sets, err := mtg.NewSetQuery().Name("khans").All()
+	if err != nil {
+		log.Panic(err)
+	}
+
+	for _, set := range sets {
+		log.Println(set)
+	}
+}
+
 func main() {
+	exampleQuerySets()
 	exampleGetTypes()
 	exampleFetchRandomCard()
 	exampleFetchAllCards()

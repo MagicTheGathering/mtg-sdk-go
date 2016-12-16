@@ -69,7 +69,7 @@ type Query interface {
 	Copy() Query
 
 	// Fetches all cards matching the current query
-	All() (<-chan *Card, <-chan error)
+	All() ([]*Card, error)
 
 	// Fetches the given page of cards.
 	Page(pageNum int) (cards []*Card, totalCardCount int, err error)
@@ -100,44 +100,37 @@ func (q query) fetch(url string) ([]*Card, http.Header, error) {
 	return cards, resp.Header, nil
 }
 
-func (q query) All() (<-chan *Card, <-chan error) {
-	res := make(chan *Card)
-	resErr := make(chan error, 1)
-	go func() {
-		queryVals := make(url.Values)
-		for k, v := range q {
-			queryVals.Set(k, v)
+func (q query) All() ([]*Card, error) {
+	var allCards []*Card
+
+	queryVals := make(url.Values)
+	for k, v := range q {
+		queryVals.Set(k, v)
+	}
+	nextUrl := queryUrl + "cards?" + queryVals.Encode()
+	for nextUrl != "" {
+		cards, header, err := q.fetch(nextUrl)
+		if err != nil {
+			return nil, err
 		}
-		nextUrl := queryUrl + "cards?" + queryVals.Encode()
-		for nextUrl != "" {
-			cards, header, err := q.fetch(nextUrl)
-			if err != nil {
-				resErr <- err
-				break
-			}
 
-			nextUrl = ""
+		nextUrl = ""
 
-			if linkH, ok := header["Link"]; ok {
-				parts := strings.Split(linkH[0], ",")
-				for _, link := range parts {
-					match := linkRE.FindStringSubmatch(link)
-					if match != nil {
-						if match[2] == "next" {
-							nextUrl = match[1]
-						}
+		if linkH, ok := header["Link"]; ok {
+			parts := strings.Split(linkH[0], ",")
+			for _, link := range parts {
+				match := linkRE.FindStringSubmatch(link)
+				if match != nil {
+					if match[2] == "next" {
+						nextUrl = match[1]
 					}
 				}
 			}
-
-			for _, c := range cards {
-				res <- c
-			}
 		}
-		close(res)
-		close(resErr)
-	}()
-	return res, resErr
+
+		allCards = append(allCards, cards...)
+	}
+	return allCards, nil
 }
 
 func (q query) Page(pageNum int) (cards []*Card, totalCardCount int, err error) {
