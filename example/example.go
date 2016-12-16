@@ -64,6 +64,7 @@ func exampleFetchCardByIDs() {
 }
 
 func main() {
+	exampleFetchAllCards()
 	exampleFetchCardByIDs()
 	exampleFetchCardPageWithPageSize()
 	exampleFetchCardPage()

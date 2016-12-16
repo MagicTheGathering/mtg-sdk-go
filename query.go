@@ -83,6 +83,21 @@ func NewQuery() Query {
 
 type query map[string]string
 
+func (q query) fetch(url string) ([]*Card, http.Header, error) {
+	resp, err := http.Get(url)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	bdy := resp.Body
+	defer bdy.Close()
+	cards, err := decodeCards(bdy)
+	if err != nil {
+		return nil, nil, err
+	}
+	return cards, resp.Header, nil
+}
+
 func (q query) All() (<-chan *Card, <-chan error) {
 	res := make(chan *Card)
 	resErr := make(chan error, 1)
@@ -93,14 +108,15 @@ func (q query) All() (<-chan *Card, <-chan error) {
 		}
 		nextUrl := queryUrl + "?" + queryVals.Encode()
 		for nextUrl != "" {
-			resp, err := http.Get(nextUrl)
+			cards, header, err := q.fetch(nextUrl)
 			if err != nil {
 				resErr <- err
 				break
 			}
+
 			nextUrl = ""
 
-			if linkH, ok := resp.Header["Link"]; ok {
+			if linkH, ok := header["Link"]; ok {
 				parts := strings.Split(linkH[0], ",")
 				for _, link := range parts {
 					match := linkRE.FindStringSubmatch(link)
@@ -112,13 +128,6 @@ func (q query) All() (<-chan *Card, <-chan error) {
 				}
 			}
 
-			bdy := resp.Body
-			defer bdy.Close()
-			cards, err := decodeCards(bdy)
-			if err != nil {
-				resErr <- err
-				break
-			}
 			for _, c := range cards {
 				res <- c
 			}
@@ -146,28 +155,15 @@ func (q query) PageS(pageNum int, pageSize int) (cards []*Card, totalCardCount i
 	queryVals.Set("page", strconv.Itoa(pageNum))
 	queryVals.Set("pageSize", strconv.Itoa(pageSize))
 
-	nextUrl := queryUrl + "?" + queryVals.Encode()
-	for nextUrl != "" {
-		resp, err := http.Get(nextUrl)
-		if err != nil {
+	url := queryUrl + "?" + queryVals.Encode()
+	cards, header, err := q.fetch(url)
+	if err != nil {
+		return nil, 0, err
+	}
+	totalCardCount = len(cards)
+	if totals, ok := header["Total-Count"]; ok && len(totals) > 0 {
+		if totalCardCount, err = strconv.Atoi(totals[0]); err != nil {
 			return nil, 0, err
-		}
-		nextUrl = ""
-
-		if totals, ok := resp.Header["Total-Count"]; ok && len(totals) > 0 {
-			if totalCardCount, err = strconv.Atoi(totals[0]); err != nil {
-				return nil, 0, err
-			}
-		}
-
-		bdy := resp.Body
-		defer bdy.Close()
-		cards, err = decodeCards(bdy)
-		if err != nil {
-			return nil, 0, err
-		}
-		if totalCardCount == 0 {
-			totalCardCount = len(cards)
 		}
 	}
 	return cards, totalCardCount, nil
