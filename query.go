@@ -75,6 +75,8 @@ type Query interface {
 	Page(pageNum int) (cards []*Card, totalCardCount int, err error)
 	// Fetches one page of cards with a given page size
 	PageS(pageNum int, pageSize int) (cards []*Card, totalCardCount int, err error)
+	// Fetches some random cards
+	Random(count int) ([]*Card, error)
 }
 
 func NewQuery() Query {
@@ -167,6 +169,20 @@ func (q query) PageS(pageNum int, pageSize int) (cards []*Card, totalCardCount i
 		}
 	}
 	return cards, totalCardCount, nil
+}
+
+func (q query) Random(count int) ([]*Card, error) {
+	queryVals := make(url.Values)
+	for k, v := range q {
+		queryVals.Set(k, v)
+	}
+
+	queryVals.Set("random", "true")
+	queryVals.Set("pageSize", strconv.Itoa(count))
+
+	url := queryUrl + "?" + queryVals.Encode()
+	cards, _, err := q.fetch(url)
+	return cards, err
 }
 
 func (q query) Copy() Query {

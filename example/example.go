@@ -63,10 +63,21 @@ func exampleFetchCardByIDs() {
 	fetchCardID(mtg.CardId("9d91ef4896ab4c1a5611d4d06971fc8026dd2f3f"))
 }
 
+func exampleFetchRandomCard() {
+	// Fetch 2 random red rare cards
+	cards, err := mtg.NewQuery().Rarity("rare").Colors("red").Random(2)
+	if err != nil {
+		log.Panic(err)
+	}
+	for _, c := range cards {
+		log.Println(c)
+	}
+}
+
 func main() {
+	exampleFetchRandomCard()
 	exampleFetchAllCards()
 	exampleFetchCardByIDs()
 	exampleFetchCardPageWithPageSize()
 	exampleFetchCardPage()
-
 }
