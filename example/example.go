@@ -74,7 +74,18 @@ func exampleFetchRandomCard() {
 	}
 }
 
+func exampleGetTypes() {
+	types, err := mtg.GetTypes()
+	if err != nil {
+		log.Panic(err)
+	}
+	for _, t := range types {
+		log.Println(t)
+	}
+}
+
 func main() {
+	exampleGetTypes()
 	exampleFetchRandomCard()
 	exampleFetchAllCards()
 	exampleFetchCardByIDs()

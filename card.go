@@ -138,7 +138,7 @@ func decodeCards(reader io.Reader) ([]*Card, error) {
 }
 
 func fetchCardById(str string) (*Card, error) {
-	resp, err := http.Get(fmt.Sprintf("%s/%s", queryUrl, str))
+	resp, err := http.Get(fmt.Sprintf("%scards/%s", queryUrl, str))
 	if err != nil {
 		return nil, err
 	}

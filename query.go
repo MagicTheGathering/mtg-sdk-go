@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	queryUrl = "https://api.magicthegathering.io/v1/cards"
+	queryUrl = "https://api.magicthegathering.io/v1/"
 )
 
 var (
@@ -108,7 +108,7 @@ func (q query) All() (<-chan *Card, <-chan error) {
 		for k, v := range q {
 			queryVals.Set(k, v)
 		}
-		nextUrl := queryUrl + "?" + queryVals.Encode()
+		nextUrl := queryUrl + "cards?" + queryVals.Encode()
 		for nextUrl != "" {
 			cards, header, err := q.fetch(nextUrl)
 			if err != nil {
@@ -157,7 +157,7 @@ func (q query) PageS(pageNum int, pageSize int) (cards []*Card, totalCardCount i
 	queryVals.Set("page", strconv.Itoa(pageNum))
 	queryVals.Set("pageSize", strconv.Itoa(pageSize))
 
-	url := queryUrl + "?" + queryVals.Encode()
+	url := queryUrl + "cards?" + queryVals.Encode()
 	cards, header, err := q.fetch(url)
 	if err != nil {
 		return nil, 0, err
@@ -180,7 +180,7 @@ func (q query) Random(count int) ([]*Card, error) {
 	queryVals.Set("random", "true")
 	queryVals.Set("pageSize", strconv.Itoa(count))
 
-	url := queryUrl + "?" + queryVals.Encode()
+	url := queryUrl + "cards?" + queryVals.Encode()
 	cards, _, err := q.fetch(url)
 	return cards, err
 }
