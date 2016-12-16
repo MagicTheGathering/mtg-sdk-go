@@ -2,6 +2,7 @@ package mtg
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/url"
 	"strconv"
@@ -79,11 +80,23 @@ func (bc *BoosterContent) String() string {
 	return s
 }
 
+func (s *Set) String() string {
+	return fmt.Sprintf("%s (%s)", s.Name, s.Code)
+}
+
 func NewSetQuery() SetQuery {
 	return make(setQuery)
 }
 
-func (q setQuery) fetch(url string) ([]*Set, http.Header, error) {
+func (sc SetCode) Fetch() (*Set, error) {
+	sets, _, err := fetchSets(fmt.Sprintf("%s/sets/%s", queryUrl, sc))
+	if err != nil || len(sets) != 1 {
+		return nil, err
+	}
+	return sets[0], nil
+}
+
+func fetchSets(url string) ([]*Set, http.Header, error) {
 	resp, err := http.Get(url)
 	if err != nil {
 		return nil, nil, err
@@ -115,7 +128,7 @@ func (q setQuery) All() ([]*Set, error) {
 	}
 	nextUrl := queryUrl + "sets?" + queryVals.Encode()
 	for nextUrl != "" {
-		sets, header, err := q.fetch(nextUrl)
+		sets, header, err := fetchSets(nextUrl)
 		if err != nil {
 			return nil, err
 		}
@@ -157,7 +170,7 @@ func (q setQuery) PageS(pageNum int, pageSize int) (sets []*Set, totalSetCount i
 	queryVals.Set("pageSize", strconv.Itoa(pageSize))
 
 	url := queryUrl + "sets?" + queryVals.Encode()
-	sets, header, err := q.fetch(url)
+	sets, header, err := fetchSets(url)
 	if err != nil {
 		return nil, 0, err
 	}

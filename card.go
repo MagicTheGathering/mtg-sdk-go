@@ -55,7 +55,7 @@ type Card struct {
 	// The rarity of the card. Examples: Common, Uncommon, Rare, Mythic Rare, Special, Basic Land
 	Rarity string `json:"rarity"`
 	// The set the card belongs to (set code).
-	Set string `json:"set"`
+	Set SetCode `json:"set"`
 	// The set the card belongs to.
 	SetName string `json:"setName"`
 	// The oracle text of the card. May contain mana symbols and other symbols.
@@ -101,7 +101,7 @@ type Card struct {
 	// Foreign language names for the card, if this card in this set was printed in another language. An array of objects, each object having 'language’, 'name’ and 'multiverseid’ keys. Not available for all sets.
 	ForeignNames []*CardName `json:"foreignNames"`
 	// The sets that this card was printed in, expressed as an array of set codes.
-	Printings []string `json:"printings"`
+	Printings []SetCode `json:"printings"`
 	// The original text on the card at the time it was printed. This field is not available for promo cards.
 	OriginalText string `json:"originalText"`
 	// The original type on the card at the time it was printed. This field is not available for promo cards.

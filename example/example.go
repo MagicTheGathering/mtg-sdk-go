@@ -93,7 +93,16 @@ func exampleQuerySets() {
 	}
 }
 
+func exampleFetchSet() {
+	set, err := mtg.SetCode("KTK").Fetch()
+	if err != nil {
+		log.Panic(err)
+	}
+	log.Println(set)
+}
+
 func main() {
+	exampleFetchSet()
 	exampleQuerySets()
 	exampleGetTypes()
 	exampleFetchRandomCard()
