@@ -14,12 +14,13 @@ type SetCode string
 type BoosterContent []string
 
 type Set struct {
+	// The code name of the set
+	SetCode `json:"code"`
+
 	// The name of the set
 	Name string `json:"name"`
 	// The block the set is in
 	Block string `json:"block"`
-	// The code name of the set
-	Code SetCode `json:"code"`
 	// The code that Gatherer uses for the set. Only present if different than ‘code’
 	GathererCode string `json:"gathererCode"`
 	// An old style code used by some Magic software. Only present if different than 'gathererCode’ and 'code’
@@ -56,6 +57,11 @@ type SetQuery interface {
 
 type setQuery map[string]string
 
+func (sc SetCode) GenerateBooster() ([]*Card, error) {
+	cards, _, err := fetchCards(fmt.Sprintf("%s/sets/%s/booster", queryUrl, sc))
+	return cards, err
+}
+
 func (bc *BoosterContent) UnmarshalJSON(data []byte) error {
 	var s string
 	var sc []string
@@ -81,7 +87,7 @@ func (bc *BoosterContent) String() string {
 }
 
 func (s *Set) String() string {
-	return fmt.Sprintf("%s (%s)", s.Name, s.Code)
+	return fmt.Sprintf("%s (%s)", s.Name, s.SetCode)
 }
 
 func NewSetQuery() SetQuery {

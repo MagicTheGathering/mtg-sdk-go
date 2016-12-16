@@ -101,7 +101,18 @@ func exampleFetchSet() {
 	log.Println(set)
 }
 
+func exampleGenerateBooster() {
+	cards, err := mtg.SetCode("KTK").GenerateBooster()
+	if err != nil {
+		log.Panic(err)
+	}
+	for _, c := range cards {
+		log.Println(c)
+	}
+}
+
 func main() {
+	exampleGenerateBooster()
 	exampleFetchSet()
 	exampleQuerySets()
 	exampleGetTypes()

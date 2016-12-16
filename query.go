@@ -85,7 +85,7 @@ func NewQuery() Query {
 
 type query map[string]string
 
-func (q query) fetch(url string) ([]*Card, http.Header, error) {
+func fetchCards(url string) ([]*Card, http.Header, error) {
 	resp, err := http.Get(url)
 	if err != nil {
 		return nil, nil, err
@@ -109,7 +109,7 @@ func (q query) All() ([]*Card, error) {
 	}
 	nextUrl := queryUrl + "cards?" + queryVals.Encode()
 	for nextUrl != "" {
-		cards, header, err := q.fetch(nextUrl)
+		cards, header, err := fetchCards(nextUrl)
 		if err != nil {
 			return nil, err
 		}
@@ -151,7 +151,7 @@ func (q query) PageS(pageNum int, pageSize int) (cards []*Card, totalCardCount i
 	queryVals.Set("pageSize", strconv.Itoa(pageSize))
 
 	url := queryUrl + "cards?" + queryVals.Encode()
-	cards, header, err := q.fetch(url)
+	cards, header, err := fetchCards(url)
 	if err != nil {
 		return nil, 0, err
 	}
@@ -174,7 +174,7 @@ func (q query) Random(count int) ([]*Card, error) {
 	queryVals.Set("pageSize", strconv.Itoa(count))
 
 	url := queryUrl + "cards?" + queryVals.Encode()
-	cards, _, err := q.fetch(url)
+	cards, _, err := fetchCards(url)
 	return cards, err
 }
 
