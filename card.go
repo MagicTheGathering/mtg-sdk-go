@@ -126,6 +126,7 @@ type Card struct {
 	Legalities []Legality `json:"legalities"`
 }
 
+// UnmarshalJSON implements the json.Unmarshaler interface. The Date is expected to be either YYYY, YYYY-MM or YYYY-MM-DD
 func (d *Date) UnmarshalJSON(data []byte) (err error) {
 	var s string
 	err = json.Unmarshal(data, &s)
@@ -166,9 +167,8 @@ func decodeCards(reader io.Reader) ([]*Card, error) {
 	}
 	if cr.Card != nil {
 		return []*Card{cr.Card}, nil
-	} else {
-		return cr.Cards, nil
 	}
+	return cr.Cards, nil
 }
 
 func checkError(r *http.Response) error {

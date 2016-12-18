@@ -9,10 +9,13 @@ import (
 	"strings"
 )
 
+// SetCode representing one specific Set of cards
 type SetCode string
 
+// BoosterContent represent one or more types of cards within a booster
 type BoosterContent []string
 
+// Set stores information about a mtg-set
 type Set struct {
 	// The code name of the set
 	SetCode `json:"code"`
@@ -39,29 +42,34 @@ type Set struct {
 	Booster []BoosterContent `json:"booster"`
 }
 
+// SetQuery is in Interface to query sets
 type SetQuery interface {
-	// The name of the set
+	// Name filters sets by their names.
 	Name(qry string) SetQuery
-	// The block the set is in
+	// Block filters sets by the block the set is in.
 	Block(qry string) SetQuery
 
-	// Creates a copy of this query
+	// Copy creates a copy of the SetQuery.
 	Copy() SetQuery
-	// Fetches all sets matching the current query
+	// All returns alls Sets which match the query
 	All() ([]*Set, error)
-	// Fetches the given page of sets.
+	// Page returns the Sets of the given page and the total count of sets which match the query.
+	// The default PageSize is 500. See also PageS
 	Page(pageNum int) (sets []*Set, totalSetCount int, err error)
-	// Fetches one page of sets with a given page size
+	// PageS returns the Sets of the given page and page size. It also returns the total count of sets
+	// which match the query.
 	PageS(pageNum int, pageSize int) (sets []*Set, totalSetCount int, err error)
 }
 
 type setQuery map[string]string
 
+// GenerateBooster returns a slice of cards which contains cards like a booster of the given set.
 func (sc SetCode) GenerateBooster() ([]*Card, error) {
 	cards, _, err := fetchCards(fmt.Sprintf("%ssets/%s/booster", queryUrl, sc))
 	return cards, err
 }
 
+// UnmarshalJSON implements the json.Unmarshaler interface.
 func (bc *BoosterContent) UnmarshalJSON(data []byte) error {
 	var s string
 	var sc []string
@@ -75,6 +83,7 @@ func (bc *BoosterContent) UnmarshalJSON(data []byte) error {
 	return fmt.Errorf("Unexpected booster content. Got %q", string(data))
 }
 
+// String returns the string representation of the BoosterContent
 func (bc *BoosterContent) String() string {
 	s := ""
 	for i, c := range *bc {
@@ -86,14 +95,17 @@ func (bc *BoosterContent) String() string {
 	return s
 }
 
+// String returns the string representation for the Set
 func (s *Set) String() string {
 	return fmt.Sprintf("%s (%s)", s.Name, s.SetCode)
 }
 
+// NewSetQuery returns a new SetQuery
 func NewSetQuery() SetQuery {
 	return make(setQuery)
 }
 
+// Fetch returns the Set of the given SetCode.
 func (sc SetCode) Fetch() (*Set, error) {
 	sets, _, err := fetchSets(fmt.Sprintf("%ssets/%s", queryUrl, sc))
 	if err != nil || len(sets) != 1 {
@@ -128,6 +140,7 @@ func fetchSets(url string) ([]*Set, http.Header, error) {
 	}
 }
 
+// All returns alls Sets which match the query
 func (q setQuery) All() ([]*Set, error) {
 	var allSets []*Set
 
@@ -161,10 +174,14 @@ func (q setQuery) All() ([]*Set, error) {
 	return allSets, nil
 }
 
+// Page returns the Sets of the given page and the total count of sets which match the query.
+// The default PageSize is 500. See also PageS
 func (q setQuery) Page(pageNum int) (sets []*Set, totalSetCount int, err error) {
 	return q.PageS(pageNum, 500)
 }
 
+// PageS returns the Sets of the given page and page size. It also returns the total count of sets
+// which match the query.
 func (q setQuery) PageS(pageNum int, pageSize int) (sets []*Set, totalSetCount int, err error) {
 	sets = nil
 	totalSetCount = 0
@@ -192,6 +209,7 @@ func (q setQuery) PageS(pageNum int, pageSize int) (sets []*Set, totalSetCount i
 	return sets, totalSetCount, nil
 }
 
+// Copy creates a copy of the SetQuery.
 func (q setQuery) Copy() SetQuery {
 	r := make(setQuery)
 	for k, v := range q {
@@ -200,11 +218,13 @@ func (q setQuery) Copy() SetQuery {
 	return r
 }
 
+// Name filters sets by their names.
 func (q setQuery) Name(qry string) SetQuery {
 	q["name"] = qry
 	return q
 }
 
+// Block filters sets by their block.
 func (q setQuery) Block(qry string) SetQuery {
 	q["block"] = qry
 	return q
