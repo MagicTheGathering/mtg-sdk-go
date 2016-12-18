@@ -169,6 +169,7 @@ func (d *Date) UnmarshalJSON(data []byte) (err error) {
 	return fmt.Errorf("%q is no valid date", s)
 }
 
+// String returns the string representation of the card. Containing the cardname and the id
 func (c *Card) String() string {
 	return fmt.Sprintf("%s (%s)", c.Name, c.Id)
 }
@@ -225,10 +226,12 @@ func fetchCardById(str string) (*Card, error) {
 	return cards[0], nil
 }
 
+// Fetch returns the card represented by the MutliverseId
 func (mID MultiverseId) Fetch() (*Card, error) {
 	return fetchCardById(fmt.Sprintf("%d", mID))
 }
 
+// Fetch returns the card represented by the CardId
 func (id CardId) Fetch() (*Card, error) {
 	return fetchCardById(string(id))
 }
