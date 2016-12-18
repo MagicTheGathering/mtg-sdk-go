@@ -5,8 +5,10 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	_ "time"
+	"time"
 )
+
+type Date time.Time
 
 type Id interface {
 	Fetch() (*Card, error)
@@ -16,7 +18,7 @@ type MultiverseId uint32
 type CardId string
 
 type Ruling struct {
-	Date string `json:"date"`
+	Date Date   `json:"date"`
 	Text string `json:"text"`
 }
 
@@ -93,7 +95,7 @@ type Card struct {
 	// Set to true if this card is reserved by Wizards Official Reprint Policy
 	Reserved bool `json:"reserved"`
 	// The date this card was released. This is only set for promo cards. The date may not be accurate to an exact day and month, thus only a partial date may be set (YYYY-MM-DD or YYYY-MM or YYYY). Some promo cards do not have a known release date.
-	ReleaseDate string `json:"releaseDate"`
+	ReleaseDate Date `json:"releaseDate"`
 	// Set to true if this card was only released as part of a core box set. These are technically part of the core sets and are tournament legal despite not being available in boosters.
 	Starter bool `json:starter`
 	// The rulings for the card.
@@ -112,6 +114,25 @@ type Card struct {
 	Source string `json:"source"`
 	// Which formats this card is legal, restricted or banned in. An array of objects, each object having 'format’ and 'legality’.
 	Legalities []Legality `json:"legalities"`
+}
+
+func (d *Date) UnmarshalJSON(data []byte) (err error) {
+	var s string
+	json.Unmarshal(data, &s)
+
+	layouts := []string{
+		"2006-01-02", "2006-01", "2006",
+	}
+	err = nil
+	var t time.Time
+	for _, layout := range layouts {
+		t, err = time.Parse(layout, s)
+		if err == nil {
+			*d = Date(t)
+			return nil
+		}
+	}
+	return
 }
 
 func (c *Card) String() string {

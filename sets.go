@@ -36,7 +36,7 @@ type Set struct {
 	// Present and set to true if the set was only released online
 	OnlineOnly bool `json:"onlineOnly"`
 	// Booster contents for this set
-	Booster []*BoosterContent `json:"booster"`
+	Booster []BoosterContent `json:"booster"`
 }
 
 type SetQuery interface {
