@@ -2,6 +2,7 @@ package mtg
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -9,6 +10,15 @@ import (
 )
 
 type Date time.Time
+
+type ServerError struct {
+	Status  string `json:"status"`
+	Message string `json:"error"`
+}
+
+func (se ServerError) Error() string {
+	return se.Message
+}
 
 type Id interface {
 	Fetch() (*Card, error)
@@ -118,7 +128,10 @@ type Card struct {
 
 func (d *Date) UnmarshalJSON(data []byte) (err error) {
 	var s string
-	json.Unmarshal(data, &s)
+	err = json.Unmarshal(data, &s)
+	if err != nil {
+		return err
+	}
 
 	layouts := []string{
 		"2006-01-02", "2006-01", "2006",
@@ -132,7 +145,7 @@ func (d *Date) UnmarshalJSON(data []byte) (err error) {
 			return nil
 		}
 	}
-	return
+	return fmt.Errorf("%q is no valid date", s)
 }
 
 func (c *Card) String() string {
@@ -158,6 +171,19 @@ func decodeCards(reader io.Reader) ([]*Card, error) {
 	}
 }
 
+func checkError(r *http.Response) error {
+	if r.StatusCode == 200 {
+		return nil
+	}
+
+	var se ServerError
+
+	if err := json.NewDecoder(r.Body).Decode(&se); err != nil {
+		return errors.New(r.Status)
+	}
+	return se
+}
+
 func fetchCardById(str string) (*Card, error) {
 	resp, err := http.Get(fmt.Sprintf("%scards/%s", queryUrl, str))
 	if err != nil {
@@ -165,6 +191,10 @@ func fetchCardById(str string) (*Card, error) {
 	}
 	bdy := resp.Body
 	defer bdy.Close()
+
+	if err := checkError(resp); err != nil {
+		return nil, err
+	}
 	cards, err := decodeCards(bdy)
 	if err != nil {
 		return nil, err

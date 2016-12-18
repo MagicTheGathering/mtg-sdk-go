@@ -67,12 +67,12 @@ func (bc *BoosterContent) UnmarshalJSON(data []byte) error {
 	var sc []string
 	if err := json.Unmarshal(data, &s); err == nil {
 		*bc = []string{s}
+		return nil
 	} else if err = json.Unmarshal(data, &sc); err == nil {
 		*bc = sc
-	} else {
-		return err
+		return nil
 	}
-	return nil
+	return fmt.Errorf("Unexpected booster content. Got %q", string(data))
 }
 
 func (bc *BoosterContent) String() string {
@@ -108,6 +108,9 @@ func fetchSets(url string) ([]*Set, http.Header, error) {
 		return nil, nil, err
 	}
 	defer resp.Body.Close()
+	if err := checkError(resp); err != nil {
+		return nil, nil, err
+	}
 
 	sr := new(struct {
 		Sets []*Set `json:"sets"`

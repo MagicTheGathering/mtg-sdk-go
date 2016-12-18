@@ -93,6 +93,10 @@ func fetchCards(url string) ([]*Card, http.Header, error) {
 
 	bdy := resp.Body
 	defer bdy.Close()
+
+	if err := checkError(resp); err != nil {
+		return nil, nil, err
+	}
 	cards, err := decodeCards(bdy)
 	if err != nil {
 		return nil, nil, err
