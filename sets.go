@@ -58,7 +58,7 @@ type SetQuery interface {
 type setQuery map[string]string
 
 func (sc SetCode) GenerateBooster() ([]*Card, error) {
-	cards, _, err := fetchCards(fmt.Sprintf("%s/sets/%s/booster", queryUrl, sc))
+	cards, _, err := fetchCards(fmt.Sprintf("%ssets/%s/booster", queryUrl, sc))
 	return cards, err
 }
 
@@ -95,7 +95,7 @@ func NewSetQuery() SetQuery {
 }
 
 func (sc SetCode) Fetch() (*Set, error) {
-	sets, _, err := fetchSets(fmt.Sprintf("%s/sets/%s", queryUrl, sc))
+	sets, _, err := fetchSets(fmt.Sprintf("%ssets/%s", queryUrl, sc))
 	if err != nil || len(sets) != 1 {
 		return nil, err
 	}
