@@ -107,7 +107,7 @@ type Card struct {
 	// The date this card was released. This is only set for promo cards. The date may not be accurate to an exact day and month, thus only a partial date may be set (YYYY-MM-DD or YYYY-MM or YYYY). Some promo cards do not have a known release date.
 	ReleaseDate Date `json:"releaseDate"`
 	// Set to true if this card was only released as part of a core box set. These are technically part of the core sets and are tournament legal despite not being available in boosters.
-	Starter bool `json:starter`
+	Starter bool `json:"starter"`
 	// The rulings for the card.
 	Rulings []*Ruling `json:"rulings"`
 	// Foreign language names for the card, if this card in this set was printed in another language. An array of objects, each object having 'language’, 'name’ and 'multiverseid’ keys. Not available for all sets.
