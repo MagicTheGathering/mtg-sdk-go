@@ -135,9 +135,8 @@ func fetchSets(url string) ([]*Set, http.Header, error) {
 	}
 	if sr.Set != nil {
 		return []*Set{sr.Set}, resp.Header, nil
-	} else {
-		return sr.Sets, resp.Header, nil
 	}
+	return sr.Sets, resp.Header, nil
 }
 
 // All returns alls Sets which match the query

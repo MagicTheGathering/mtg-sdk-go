@@ -9,40 +9,60 @@ import (
 	"time"
 )
 
+// Date which can be unmarshalled from json
 type Date time.Time
 
+// ServerError is an error implementation for server messages.
 type ServerError struct {
-	Status  string `json:"status"`
+	// Status code given by the server
+	Status string `json:"status"`
+	// Message given by the server
 	Message string `json:"error"`
 }
 
+// Error implements the error interface
 func (se ServerError) Error() string {
 	return se.Message
 }
 
+// Id interface for different card id types such as MultiverseId or CardId
 type Id interface {
 	Fetch() (*Card, error)
 }
 
+// MultiverseId which can be used to fetch the card by its id
 type MultiverseId uint32
+
+// CardId which can be used to fetch the card by its id
 type CardId string
 
+// Ruling contains additional rule information about the card.
 type Ruling struct {
-	Date Date   `json:"date"`
+	// Date the information was released.
+	Date Date `json:"date"`
+	// Text of the ruling hint.
 	Text string `json:"text"`
 }
 
+// CardName represents the name of the card in an other language
 type CardName struct {
-	Name         string `json:"name"`
-	Language     string `json:"language"`
-	MultiverseId uint   `json:"multiverseid"`
+	// Name is the name of the card in the given language
+	Name string `json:"name"`
+	// Language of the CardName
+	Language string `json:"language"`
+	// MultiverseId of the CardName (might be 0)
+	MultiverseId uint `json:"multiverseid"`
 }
 
+// Legality stores information about legality notices for a specific format.
 type Legality struct {
-	Format   string `json:"format"`
+	// Format, such as Commander, Standard, Legacy, etc.
+	Format string `json:"format"`
+	// Legality for the given format such as Legal, Banned or Restricted.
 	Legality string `json:"legality"`
 }
 
+// Card stores information about one single card.
 type Card struct {
 	// The card name. For split, double-faced and flip cards, just the name of one side of the card. Basically each ‘sub-card’ has its own record.
 	Name string `json:"name"`

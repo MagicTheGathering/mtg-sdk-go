@@ -16,6 +16,7 @@ var (
 	linkRE = regexp.MustCompile(`<(.*)>; rel="(.*)"`)
 )
 
+// Query interface can be used to query multiple cards by their properties
 type Query interface {
 	// The card name. For split, double-faced and flip cards, just the name of one side of the card. Basically each ‘sub-card’ has its own record.
 	Name(qry string) Query
@@ -79,6 +80,7 @@ type Query interface {
 	Random(count int) ([]*Card, error)
 }
 
+// NewQuery creates a new Query to fetch cards
 func NewQuery() Query {
 	return make(query)
 }
