@@ -1,7 +1,7 @@
-package mtg
+package mtg_test
 
 import (
-	mtg "."
+	"github.com/boombuler/magicthegathering.io"
 	"log"
 )
 
