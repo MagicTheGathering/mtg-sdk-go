@@ -5,7 +5,7 @@ import (
 	"log"
 )
 
-func ExampleQueryAll() {
+func ExampleQuery_All() {
 	log.Println("Fetching all cards with CMC >= 16")
 	cards, err := mtg.NewQuery().Where(mtg.CardCMC, "gte16").All()
 	if err != nil {
@@ -16,7 +16,7 @@ func ExampleQueryAll() {
 	}
 }
 
-func ExampleQueryPage() {
+func ExampleQuery_Page() {
 	log.Println("fetch first page (100 cards in total)")
 
 	cards, totalCards, err := mtg.NewQuery().Where(mtg.CardColors, "green|red").Page(1)
@@ -30,7 +30,7 @@ func ExampleQueryPage() {
 	}
 }
 
-func ExampleQueryPageS() {
+func ExampleQuery_PageS() {
 	log.Println("Fetch Page 2 with a page size of 5")
 
 	cards, totalCards, err := mtg.NewQuery().Where(mtg.CardColors, "white").PageS(2, 5)
@@ -44,7 +44,7 @@ func ExampleQueryPageS() {
 	}
 }
 
-func ExampleIdFetch() {
+func ExampleId_Fetch() {
 	fetchCardID := func(cID mtg.Id) {
 		// cID could either be a CardId or a MultiverseId
 		card, err := cID.Fetch()
@@ -61,7 +61,7 @@ func ExampleIdFetch() {
 	fetchCardID(mtg.CardId("9d91ef4896ab4c1a5611d4d06971fc8026dd2f3f"))
 }
 
-func ExampleQueryRandom() {
+func ExampleQuery_Random() {
 	// Fetch 2 random red rare cards
 	cards, err := mtg.NewQuery().Where(mtg.CardRarity, "rare").Where(mtg.CardColors, "red").Random(2)
 	if err != nil {
@@ -83,7 +83,7 @@ func ExampleSetQuery() {
 	}
 }
 
-func ExampleSetCodeFetch() {
+func ExampleSetCode_Fetch() {
 	set, err := mtg.SetCode("KTK").Fetch()
 	if err != nil {
 		log.Panic(err)
@@ -91,7 +91,7 @@ func ExampleSetCodeFetch() {
 	log.Println(set)
 }
 
-func ExampleSetCodeGenerateBooster() {
+func ExampleSetCode_GenerateBooster() {
 	cards, err := mtg.SetCode("KTK").GenerateBooster()
 	if err != nil {
 		log.Panic(err)
