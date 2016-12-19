@@ -1,11 +1,11 @@
-package main
+package mtg
 
 import (
-	"github.com/boombuler/magicthegathering.io"
+	mtg "."
 	"log"
 )
 
-func exampleFetchAllCards() {
+func ExampleFetchAllCards() {
 	log.Println("Fetching all cards with CMC >= 16")
 	cards, err := mtg.NewQuery().Where(mtg.CardCMC, "gte16").All()
 	if err != nil {
@@ -16,7 +16,7 @@ func exampleFetchAllCards() {
 	}
 }
 
-func exampleFetchCardPage() {
+func ExampleFetchCardPage() {
 	log.Println("fetch first page (100 cards in total)")
 
 	cards, totalCards, err := mtg.NewQuery().Where(mtg.CardColors, "green|red").Page(1)
@@ -30,7 +30,7 @@ func exampleFetchCardPage() {
 	}
 }
 
-func exampleFetchCardPageWithPageSize() {
+func ExampleFetchCardPageWithPageSize() {
 	log.Println("Fetch Page 2 with a page size of 5")
 
 	cards, totalCards, err := mtg.NewQuery().Where(mtg.CardColors, "white").PageS(2, 5)
@@ -44,16 +44,17 @@ func exampleFetchCardPageWithPageSize() {
 	}
 }
 
-func fetchCardID(cID mtg.Id) {
-	// cID could either be a CardId or a MultiverseId
-	card, err := cID.Fetch()
-	if err != nil {
-		log.Panic(err)
-	}
-	log.Println(card)
-}
+func ExampleFetchCardByIDs() {
 
-func exampleFetchCardByIDs() {
+	fetchCardID := func(cID mtg.Id) {
+		// cID could either be a CardId or a MultiverseId
+		card, err := cID.Fetch()
+		if err != nil {
+			log.Panic(err)
+		}
+		log.Println(card)
+	}
+
 	log.Println("Fetching one Card with a given multiverseId")
 	fetchCardID(mtg.MultiverseId(73947))
 
@@ -61,7 +62,7 @@ func exampleFetchCardByIDs() {
 	fetchCardID(mtg.CardId("9d91ef4896ab4c1a5611d4d06971fc8026dd2f3f"))
 }
 
-func exampleFetchRandomCard() {
+func ExampleFetchRandomCard() {
 	// Fetch 2 random red rare cards
 	cards, err := mtg.NewQuery().Where(mtg.CardRarity, "rare").Where(mtg.CardColors, "red").Random(2)
 	if err != nil {
@@ -72,7 +73,7 @@ func exampleFetchRandomCard() {
 	}
 }
 
-func exampleGetTypes() {
+func ExampleGetTypes() {
 	types, err := mtg.GetTypes()
 	if err != nil {
 		log.Panic(err)
@@ -82,7 +83,7 @@ func exampleGetTypes() {
 	}
 }
 
-func exampleQuerySets() {
+func ExampleQuerySets() {
 	sets, err := mtg.NewSetQuery().Where(mtg.SetName, "khans").All()
 	if err != nil {
 		log.Panic(err)
@@ -93,7 +94,7 @@ func exampleQuerySets() {
 	}
 }
 
-func exampleFetchSet() {
+func ExampleFetchSet() {
 	set, err := mtg.SetCode("KTK").Fetch()
 	if err != nil {
 		log.Panic(err)
@@ -101,7 +102,7 @@ func exampleFetchSet() {
 	log.Println(set)
 }
 
-func exampleGenerateBooster() {
+func ExampleGenerateBooster() {
 	cards, err := mtg.SetCode("KTK").GenerateBooster()
 	if err != nil {
 		log.Panic(err)
@@ -109,16 +110,4 @@ func exampleGenerateBooster() {
 	for _, c := range cards {
 		log.Println(c)
 	}
-}
-
-func main() {
-	exampleGenerateBooster()
-	exampleFetchSet()
-	exampleQuerySets()
-	exampleGetTypes()
-	exampleFetchRandomCard()
-	exampleFetchAllCards()
-	exampleFetchCardByIDs()
-	exampleFetchCardPageWithPageSize()
-	exampleFetchCardPage()
 }
