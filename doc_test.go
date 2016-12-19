@@ -72,7 +72,7 @@ func ExampleQuery_Random() {
 	}
 }
 
-func ExampleSetQuery() {
+func ExampleSetQuery_All() {
 	sets, err := mtg.NewSetQuery().Where(mtg.SetName, "khans").All()
 	if err != nil {
 		log.Panic(err)
