@@ -44,13 +44,13 @@ type Ruling struct {
 	Text string `json:"text"`
 }
 
-// CardName represents the name of the card in an other language
-type CardName struct {
+// ForeignCardName represents the name of the card in an other language
+type ForeignCardName struct {
 	// Name is the name of the card in the given language
 	Name string `json:"name"`
-	// Language of the CardName
+	// Language of the ForeignCardName
 	Language string `json:"language"`
-	// MultiverseId of the CardName (might be 0)
+	// MultiverseId of the ForeignCardName (might be 0)
 	MultiverseId uint `json:"multiverseid"`
 }
 
@@ -131,7 +131,7 @@ type Card struct {
 	// The rulings for the card.
 	Rulings []*Ruling `json:"rulings"`
 	// Foreign language names for the card, if this card in this set was printed in another language. An array of objects, each object having 'language’, 'name’ and 'multiverseid’ keys. Not available for all sets.
-	ForeignNames []*CardName `json:"foreignNames"`
+	ForeignNames []ForeignCardName `json:"foreignNames"`
 	// The sets that this card was printed in, expressed as an array of set codes.
 	Printings []SetCode `json:"printings"`
 	// The original text on the card at the time it was printed. This field is not available for promo cards.

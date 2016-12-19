@@ -19,52 +19,75 @@ var (
 type cardColumn string
 
 var (
-	// The card name. For split, double-faced and flip cards, just the name of one side of the card. Basically each ‘sub-card’ has its own record.
-	Card_Name = cardColumn("name")
+	// CardName is the column for the name property.
+	// For split, double-faced and flip cards, just the name of one side of the card. Basically each ‘sub-card’ has its own record.
+	CardName = cardColumn("name")
+	// CardLayout is the column for the layout property.
 	// The card layout. Possible values: normal, split, flip, double-faced, token, plane, scheme, phenomenon, leveler, vanguard
-	Card_Layout = cardColumn("layout")
+	CardLayout = cardColumn("layout")
+	// CardCMC is the column for the cmc property.
 	// Converted mana cost. Always a number.
-	Card_CMC = cardColumn("cmc")
+	CardCMC = cardColumn("cmc")
+	// CardColors is the column for the colors property.
 	// The card colors. Usually this is derived from the casting cost, but some cards are special (like the back of dual sided cards and Ghostfire).
-	Card_Colors = cardColumn("colors")
+	CardColors = cardColumn("colors")
+	// CardColorIdentity is the column for the color identity property.
 	// The card colors by color code. [“Red”, “Blue”] becomes [“R”, “U”]
-	Card_ColorIdentity = cardColumn("colorIdentity")
+	CardColorIdentity = cardColumn("colorIdentity")
+	// CardType is the column for the type property.
 	// The card type. This is the type you would see on the card if printed today. Note: The dash is a UTF8 'long dash’ as per the MTG rules
-	Card_Type = cardColumn("type")
+	CardType = cardColumn("type")
+	// CardSupertypes is the column for the supertypes property.
 	// The supertypes of the card. These appear to the far left of the card type. Example values: Basic, Legendary, Snow, World, Ongoing
-	Card_Supertypes = cardColumn("supertypes")
+	CardSupertypes = cardColumn("supertypes")
+	// CardTypes is the column for the types property.
 	// The types of the card. These appear to the left of the dash in a card type. Example values: Instant, Sorcery, Artifact, Creature, Enchantment, Land, Planeswalker
-	Card_Types = cardColumn("types")
+	CardTypes = cardColumn("types")
+	// CardSubtypes is the column for the subtypes property.
 	// The subtypes of the card. These appear to the right of the dash in a card type. Usually each word is its own subtype. Example values: Trap, Arcane, Equipment, Aura, Human, Rat, Squirrel, etc.
-	Card_Subtypes = cardColumn("subtypes")
+	CardSubtypes = cardColumn("subtypes")
+	// CardRarity is the column for the rarity property.
 	// The rarity of the card. Examples: Common, Uncommon, Rare, Mythic Rare, Special, Basic Land
-	Card_Rarity = cardColumn("rarity")
+	CardRarity = cardColumn("rarity")
+	// CardSet is the column for the set property.
 	// The set the card belongs to (set code).
-	Card_Set = cardColumn("set")
+	CardSet = cardColumn("set")
+	// CardSetName is the column for the setName property.
 	// The set the card belongs to.
-	Card_SetName = cardColumn("setName")
+	CardSetName = cardColumn("setName")
+	// CardText is the column for the text property.
 	// The oracle text of the card. May contain mana symbols and other symbols.
-	Card_Text = cardColumn("text")
+	CardText = cardColumn("text")
+	// CardFlavor is the column for the flavor property.
 	// The flavor text of the card.
-	Card_Flavor = cardColumn("flavor")
+	CardFlavor = cardColumn("flavor")
+	// CardArtist is the column for the artist property.
 	// The artist of the card. This may not match what is on the card as MTGJSON corrects many card misprints.
-	Card_Artist = cardColumn("artist")
+	CardArtist = cardColumn("artist")
+	// CardNumber is the column for the number property.
 	// The card number. This is printed at the bottom-center of the card in small text. This is a string, not an integer, because some cards have letters in their numbers.
-	Card_Number = cardColumn("number")
+	CardNumber = cardColumn("number")
+	// CardPower is the column for the power property.
 	// The power of the card. This is only present for creatures. This is a string, not an integer, because some cards have powers like: “1+*”
-	Card_Power = cardColumn("power")
+	CardPower = cardColumn("power")
+	// CardToughness is the column for the toughness property.
 	// The toughness of the card. This is only present for creatures. This is a string, not an integer, because some cards have toughness like: “1+*”
-	Card_Toughness = cardColumn("toughness")
+	CardToughness = cardColumn("toughness")
+	// CardLoyalty is the column for the loyalty property.
 	// The loyalty of the card. This is only present for planeswalkers.
-	Card_Loyalty = cardColumn("loyalty")
+	CardLoyalty = cardColumn("loyalty")
+	// CardForeignName is the column for the foreign name property.
 	// The name of a card in a foreign language it was printed in
-	Card_ForeignName = cardColumn("foreignName")
+	CardForeignName = cardColumn("foreignName")
+	// CardLanguage is the column for the language property.
 	// The language the card is printed in. Use this parameter when searching by foreignName
-	Card_Language = cardColumn("language")
+	CardLanguage = cardColumn("language")
+	// CardGameFormat is the column for the game format property.
 	// The game format, such as Commander, Standard, Legacy, etc. (when used, legality defaults to Legal unless supplied)
-	Card_GameFormat = cardColumn("gameFormat")
+	CardGameFormat = cardColumn("gameFormat")
+	// CardLegality is the column for the legality property.
 	// The legality of the card for a given format, such as Legal, Banned or Restricted.
-	Card_Legality = cardColumn("legality")
+	CardLegality = cardColumn("legality")
 )
 
 // Query interface can be used to query multiple cards by their properties

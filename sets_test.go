@@ -54,7 +54,7 @@ func Test_SetQuery(t *testing.T) {
 					"Total-Count": "1337",
 				}))
 		httpmock.RegisterResponder("GET", "https://api.magicthegathering.io/v1/sets/PLS",
-			httpmock.NewStringResponder(200, `{"sets":[{"code":"PLS","name":"Planeshift","type":"expansion","border":"black","booster":["rare","uncommon","uncommon","uncommon","common","common","common","common","common","common","common","common","common","common","common"],"releaseDate":"2001-02-05","gathererCode":"PS","magicCardsInfoCode":"ps","block":"Invasion"}]}`))
+			httpmock.NewStringResponder(200, `{"set":{"code":"PLS","name":"Planeshift","type":"expansion","border":"black","booster":["rare","uncommon","uncommon","uncommon","common","common","common","common","common","common","common","common","common","common","common"],"releaseDate":"2001-02-05","gathererCode":"PS","magicCardsInfoCode":"ps","block":"Invasion"}}`))
 		httpmock.RegisterResponder("GET", "https://api.magicthegathering.io/v1/sets/FOO_BAR",
 			httpmock.NewStringResponder(200, `{"sets":[]}`))
 		httpmock.RegisterResponder("GET", "https://api.magicthegathering.io/v1/sets/network_issue",
@@ -63,7 +63,7 @@ func Test_SetQuery(t *testing.T) {
 		qry := NewSetQuery()
 
 		Convey("When searching by name", func() {
-			qry = qry.Where(Set_Name, "Planeshift")
+			qry = qry.Where(SetName, "Planeshift")
 
 			Convey("a copy should make no difference", func() {
 				cpy := qry.Copy()

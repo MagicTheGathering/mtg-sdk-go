@@ -12,10 +12,10 @@ import (
 type setColumn string
 
 var (
-	// Name of the set
-	Set_Name = setColumn("name")
-	// Block the set is in
-	Set_Block = setColumn("block")
+	// SetName is the name of the set
+	SetName = setColumn("name")
+	// SetBlock is the block the set is in
+	SetBlock = setColumn("block")
 )
 
 // SetCode representing one specific Set of cards

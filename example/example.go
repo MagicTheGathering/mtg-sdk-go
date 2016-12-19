@@ -7,7 +7,7 @@ import (
 
 func exampleFetchAllCards() {
 	log.Println("Fetching all cards with CMC >= 16")
-	cards, err := mtg.NewQuery().Where(mtg.Card_CMC, "gte16").All()
+	cards, err := mtg.NewQuery().Where(mtg.CardCMC, "gte16").All()
 	if err != nil {
 		log.Panic(err)
 	}
@@ -19,7 +19,7 @@ func exampleFetchAllCards() {
 func exampleFetchCardPage() {
 	log.Println("fetch first page (100 cards in total)")
 
-	cards, totalCards, err := mtg.NewQuery().Where(mtg.Card_Colors, "green|red").Page(1)
+	cards, totalCards, err := mtg.NewQuery().Where(mtg.CardColors, "green|red").Page(1)
 	if err != nil {
 		log.Panic(err)
 	}
@@ -33,7 +33,7 @@ func exampleFetchCardPage() {
 func exampleFetchCardPageWithPageSize() {
 	log.Println("Fetch Page 2 with a page size of 5")
 
-	cards, totalCards, err := mtg.NewQuery().Where(mtg.Card_Colors, "white").PageS(2, 5)
+	cards, totalCards, err := mtg.NewQuery().Where(mtg.CardColors, "white").PageS(2, 5)
 	if err != nil {
 		log.Panic(err)
 	}
@@ -63,7 +63,7 @@ func exampleFetchCardByIDs() {
 
 func exampleFetchRandomCard() {
 	// Fetch 2 random red rare cards
-	cards, err := mtg.NewQuery().Where(mtg.Card_Rarity, "rare").Where(mtg.Card_Colors, "red").Random(2)
+	cards, err := mtg.NewQuery().Where(mtg.CardRarity, "rare").Where(mtg.CardColors, "red").Random(2)
 	if err != nil {
 		log.Panic(err)
 	}
@@ -83,7 +83,7 @@ func exampleGetTypes() {
 }
 
 func exampleQuerySets() {
-	sets, err := mtg.NewSetQuery().Where(mtg.Set_Name, "khans").All()
+	sets, err := mtg.NewSetQuery().Where(mtg.SetName, "khans").All()
 	if err != nil {
 		log.Panic(err)
 	}
