@@ -2,37 +2,11 @@ package mtg
 
 import (
 	"encoding/json"
-	"fmt"
 	"testing"
 	"time"
 
 	. "github.com/smartystreets/goconvey/convey"
 )
-
-func ShouldBeOn(actual interface{}, expected ...interface{}) string {
-	if len(expected) != 1 {
-		return "Invalid parameters for ShouldBeOn"
-	}
-	var actualTime time.Time
-	date, firstOk := actual.(Date)
-	if firstOk {
-		actualTime = time.Time(date)
-	} else {
-		actualTime, firstOk = actual.(time.Time)
-	}
-
-	expectedTime, secondOk := expected[0].(time.Time)
-
-	if !firstOk || !secondOk {
-		return "ShouldBeOn should be used on date / time values"
-	}
-
-	if actualTime.Before(expectedTime) || actualTime.After(expectedTime) {
-		return fmt.Sprintf("Expected to happen on %v but happened on %v", expectedTime, actualTime)
-	}
-
-	return ""
-}
 
 func Test_Date(t *testing.T) {
 	Convey("json date decoding", t, func() {

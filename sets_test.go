@@ -1,34 +1,12 @@
 package mtg
 
 import (
-	_ "errors"
-	"fmt"
+	"errors"
 	"testing"
 
 	. "github.com/smartystreets/goconvey/convey"
 	"gopkg.in/jarcoal/httpmock.v1"
 )
-
-func ShouldContainCard(actual interface{}, expected ...interface{}) string {
-	if len(expected) != 1 {
-		return "Invalid parameters for ShouldContainCard"
-	}
-
-	cards, firstOk := actual.([]*Card)
-	cardName, secondOk := expected[0].(string)
-
-	if !firstOk || !secondOk {
-		return "Invalid Arguments for ShouldContainCard"
-	}
-
-	for _, card := range cards {
-		if card.Name == cardName {
-			return ""
-		}
-	}
-
-	return fmt.Sprintf("Card %q was not found in %q", cardName, cards)
-}
 
 func Test_GenerateBooster(t *testing.T) {
 	httpmock.Activate()
@@ -71,24 +49,51 @@ func Test_SetQuery(t *testing.T) {
 
 	Convey("With a new SetQuery", t, func() {
 		httpmock.RegisterResponder("GET", "https://api.magicthegathering.io/v1/sets?name=Planeshift&page=1&pageSize=500",
+			NewStringResponderWithHeader(200, `{"sets":[{"code":"PLS","name":"Planeshift","type":"expansion","border":"black","booster":["rare","uncommon","uncommon","uncommon","common","common","common","common","common","common","common","common","common","common","common"],"releaseDate":"2001-02-05","gathererCode":"PS","magicCardsInfoCode":"ps","block":"Invasion"}]}`,
+				map[string]string{
+					"Total-Count": "1337",
+				}))
+		httpmock.RegisterResponder("GET", "https://api.magicthegathering.io/v1/sets/PLS",
 			httpmock.NewStringResponder(200, `{"sets":[{"code":"PLS","name":"Planeshift","type":"expansion","border":"black","booster":["rare","uncommon","uncommon","uncommon","common","common","common","common","common","common","common","common","common","common","common"],"releaseDate":"2001-02-05","gathererCode":"PS","magicCardsInfoCode":"ps","block":"Invasion"}]}`))
+		httpmock.RegisterResponder("GET", "https://api.magicthegathering.io/v1/sets/FOO_BAR",
+			httpmock.NewStringResponder(200, `{"sets":[]}`))
+		httpmock.RegisterResponder("GET", "https://api.magicthegathering.io/v1/sets/network_issue",
+			httpmock.NewErrorResponder(errors.New("Network Issue")))
 
 		qry := NewSetQuery()
 
 		Convey("When searching by name", func() {
-			qry = qry.Name("Planeshift")
+			qry = qry.Where(Set_Name, "Planeshift")
 
 			Convey("a copy should make no difference", func() {
 				cpy := qry.Copy()
 				So(cpy, ShouldResemble, qry)
+				So(cpy, ShouldNotEqual, qry)
 			})
 
 			sets, totalCount, err := qry.Page(1)
 
 			So(err, ShouldBeNil)
-			So(totalCount, ShouldEqual, 1)
+			So(totalCount, ShouldEqual, 1337)
 			So(sets, ShouldHaveLength, 1)
-			So(sets[0].Name, ShouldEqual, "Planeshift")
+
+			set := sets[0]
+			So(set.Name, ShouldEqual, "Planeshift")
+			So(set.String(), ShouldEqual, "Planeshift (PLS)")
+
+			Convey("fetching the same set by its id should result in the same values", func() {
+				other, err := set.SetCode.Fetch()
+				So(err, ShouldBeNil)
+				So(other, ShouldResemble, set)
+			})
+			Convey("fetching an invalid setcode should return an error", func() {
+				_, err := SetCode("FOO_BAR").Fetch()
+				So(err, ShouldNotBeNil)
+			})
+			Convey("when we have network issues, there should also be an error", func() {
+				_, err := SetCode("network_issue").Fetch()
+				So(err, ShouldNotBeNil)
+			})
 		})
 	})
 }

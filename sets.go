@@ -9,6 +9,15 @@ import (
 	"strings"
 )
 
+type setColumn string
+
+var (
+	// Name of the set
+	Set_Name = setColumn("name")
+	// Block the set is in
+	Set_Block = setColumn("block")
+)
+
 // SetCode representing one specific Set of cards
 type SetCode string
 
@@ -44,10 +53,8 @@ type Set struct {
 
 // SetQuery is in Interface to query sets
 type SetQuery interface {
-	// Name filters sets by their names.
-	Name(qry string) SetQuery
-	// Block filters sets by the block the set is in.
-	Block(qry string) SetQuery
+	// Where filters the given column by the given value
+	Where(col setColumn, qry string) SetQuery
 
 	// Copy creates a copy of the SetQuery.
 	Copy() SetQuery
@@ -108,8 +115,11 @@ func NewSetQuery() SetQuery {
 // Fetch returns the Set of the given SetCode.
 func (sc SetCode) Fetch() (*Set, error) {
 	sets, _, err := fetchSets(fmt.Sprintf("%ssets/%s", queryUrl, sc))
-	if err != nil || len(sets) != 1 {
+	if err != nil {
 		return nil, err
+	}
+	if len(sets) != 1 {
+		return nil, fmt.Errorf("Set %q not found", string(sc))
 	}
 	return sets[0], nil
 }
@@ -217,14 +227,7 @@ func (q setQuery) Copy() SetQuery {
 	return r
 }
 
-// Name filters sets by their names.
-func (q setQuery) Name(qry string) SetQuery {
-	q["name"] = qry
-	return q
-}
-
-// Block filters sets by their block.
-func (q setQuery) Block(qry string) SetQuery {
-	q["block"] = qry
+func (q setQuery) Where(col setColumn, qry string) SetQuery {
+	q[string(col)] = qry
 	return q
 }
