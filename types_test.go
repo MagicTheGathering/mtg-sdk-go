@@ -33,21 +33,28 @@ func Test_GetTypes(t *testing.T) {
 			httpmock.RegisterResponder("GET", "https://api.magicthegathering.io/v1/types",
 				httpmock.NewStringResponder(500, `{"status": "500", "error":"Internal server error"}`))
 
-			_, err := GetTypes()
-			So(err, ShouldNotBeNil)
+			Convey("There should be an error", func() {
+				_, err := GetTypes()
+				So(err, ShouldNotBeNil)
 
-			_, isServerError := err.(ServerError)
-			So(isServerError, ShouldBeTrue)
+				Convey("and it should be a ServerError", func() {
+					_, isServerError := err.(ServerError)
+					So(isServerError, ShouldBeTrue)
+				})
+			})
 		})
 		Convey("If we get invalid json", func() {
 			httpmock.RegisterResponder("GET", "https://api.magicthegathering.io/v1/types",
 				httpmock.NewStringResponder(200, `{"types":"YES"}`))
+			Convey("There should be an error", func() {
+				_, err := GetTypes()
+				So(err, ShouldNotBeNil)
 
-			_, err := GetTypes()
-			So(err, ShouldNotBeNil)
-
-			_, isServerError := err.(ServerError)
-			So(isServerError, ShouldBeFalse)
+				Convey("and it should be no ServerError", func() {
+					_, isServerError := err.(ServerError)
+					So(isServerError, ShouldBeFalse)
+				})
+			})
 		})
 	})
 }
