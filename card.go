@@ -103,7 +103,7 @@ type Card struct {
 	// The toughness of the card. This is only present for creatures. This is a string, not an integer, because some cards have toughness like: “1+*”
 	Toughness string `json:"toughness"`
 	// The loyalty of the card. This is only present for planeswalkers.
-	Loyalty string `json:"loyalty"`
+	Loyalty int `json:"loyalty"`
 	// The card layout. Possible values: normal, split, flip, double-faced, token, plane, scheme, phenomenon, leveler, vanguard
 	Layout string `json:"layout"`
 	// The multiverseid of the card on Wizard’s Gatherer web page. Cards from sets that do not exist on Gatherer will NOT have a multiverseid. Sets not on Gatherer are: ATH, ITP, DKM, RQS, DPA and all sets with a 4 letter code that starts with a lowercase 'p’.
