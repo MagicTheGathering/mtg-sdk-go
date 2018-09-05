@@ -11,7 +11,7 @@ This is the Magic: The Gathering SDK Go implementation. It is a wrapper around t
 
 Just run
 
-`go get https://github.com/MagicTheGathering/mtg-sdk-go`
+`go get github.com/MagicTheGathering/mtg-sdk-go`
 
 ## Docs
 
