@@ -71,7 +71,7 @@ type Card struct {
 	// The mana cost of this card. Consists of one or more mana symbols. (use cmc and colors to query)
 	ManaCost string `json:"manaCost"`
 	// Converted mana cost. Always a number.
-	CMC uint32 `json:"cmc"`
+	CMC float64 `json:"cmc"`
 	// The card colors. Usually this is derived from the casting cost, but some cards are special (like the back of dual sided cards and Ghostfire).
 	Colors []string `json:"colors"`
 	// The card colors by color code. [“Red”, “Blue”] becomes [“R”, “U”]
@@ -103,13 +103,13 @@ type Card struct {
 	// The toughness of the card. This is only present for creatures. This is a string, not an integer, because some cards have toughness like: “1+*”
 	Toughness string `json:"toughness"`
 	// The loyalty of the card. This is only present for planeswalkers.
-	Loyalty int `json:"loyalty"`
+	Loyalty string `json:"loyalty"`
 	// The card layout. Possible values: normal, split, flip, double-faced, token, plane, scheme, phenomenon, leveler, vanguard
 	Layout string `json:"layout"`
 	// The multiverseid of the card on Wizard’s Gatherer web page. Cards from sets that do not exist on Gatherer will NOT have a multiverseid. Sets not on Gatherer are: ATH, ITP, DKM, RQS, DPA and all sets with a 4 letter code that starts with a lowercase 'p’.
 	MultiverseId MultiverseId `json:"multiverseid"`
 	// If a card has alternate art (for example, 4 different Forests, or the 2 Brothers Yamazaki) then each other variation’s multiverseid will be listed here, NOT including the current card’s multiverseid.
-	Variations []MultiverseId `json:"variations"`
+	Variations []string `json:"variations"`
 	// The image url for a card. Only exists if the card has a multiverse id.
 	ImageUrl string `json:"imageUrl"`
 	// The watermark on the card. Note: Split cards don’t currently have this field set, despite having a watermark on each side of the split card.
