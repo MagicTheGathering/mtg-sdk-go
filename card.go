@@ -51,7 +51,7 @@ type ForeignCardName struct {
 	// Language of the ForeignCardName
 	Language string `json:"language"`
 	// MultiverseId of the ForeignCardName (might be 0)
-	MultiverseId string `json:"multiverseid"`
+	MultiverseId MultiverseId `json:"multiverseid"`
 }
 
 // Legality stores information about legality notices for a specific format.
