@@ -181,7 +181,6 @@ type cardResponse struct {
 
 func decodeCards(reader io.Reader) ([]*Card, error) {
 	fmt.Println(reader)
-	fmt.Println("card response ", cardResponse)
 	cr := new(cardResponse)
 	fmt.Println("cr  ", cr)
 	decoder := json.NewDecoder(reader)
