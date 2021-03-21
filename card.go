@@ -7,6 +7,8 @@ import (
 	"io"
 	"net/http"
 	"time"
+
+	"github.com/mitchellh/mapstructure"
 )
 
 // Date which can be unmarshalled from json
@@ -184,18 +186,17 @@ func decodeCards(reader io.Reader) ([]*Card, error) {
 	cr := new(cardResponse)
 	fmt.Println("cr  ", cr)
 	decoder := json.NewDecoder(reader)
-	err := decoder.Decode(&cr)
+	target := make(map[string]interface{})
+	err := decoder.Decode(&target)
 	if err != nil {
-		fmt.Println(err)
-		target := make(map[string]interface{})
-		err = decoder.Decode(&target)
-		if err != nil {
-			fmt.Println(err)
-			return nil, err
-		}
-		fmt.Println(target)
 		return nil, err
 	}
+	err := mapstructure.Decode(target, &cr)
+	if err != nil {
+		fmt.Println("what a hekk", err)
+		return nil, err
+	}
+	fmt.Println("carrrrddsdss ", cr)
 	if cr.Card != nil {
 		return []*Card{cr.Card}, nil
 	}
