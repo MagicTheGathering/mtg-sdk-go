@@ -193,7 +193,8 @@ func decodeCards(reader io.Reader) ([]*Card, error) {
 		return nil, err
 	}
 	for k, v := range target {
-		fmt.Println("key: " + k + "value: " + v)
+		fmt.Println("key: " + k)
+		fmt.Println("value: ", v)
 		fmt.Println(reflect.TypeOf(v).String())
 	}
 
