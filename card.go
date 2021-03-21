@@ -51,7 +51,7 @@ type ForeignCardName struct {
 	// Language of the ForeignCardName
 	Language string `json:"language"`
 	// MultiverseId of the ForeignCardName (might be 0)
-	MultiverseId MultiverseId `json:"multiverseid"`
+	MultiverseId int64 `json:"multiverseid"`
 }
 
 // Legality stores information about legality notices for a specific format.
@@ -184,7 +184,12 @@ func decodeCards(reader io.Reader) ([]*Card, error) {
 	cr := new(cardResponse)
 	fmt.Println("cr  ", cr)
 	decoder := json.NewDecoder(reader)
-	err := decoder.Decode(&cr)
+	target := make(map[string]interface{})
+	err := decoder.Decode(&target)
+	if err == nil {
+		fmt.Println(target)
+	}
+	err = decoder.Decode(&cr)
 	if err != nil {
 		return nil, err
 	}
