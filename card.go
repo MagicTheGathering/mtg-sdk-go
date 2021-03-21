@@ -31,7 +31,7 @@ type Id interface {
 }
 
 // MultiverseId which can be used to fetch the card by its id
-type MultiverseId string
+type MultiverseId uint64
 
 // CardId which can be used to fetch the card by its id
 type CardId string
@@ -51,7 +51,7 @@ type ForeignCardName struct {
 	// Language of the ForeignCardName
 	Language string `json:"language"`
 	// MultiverseId of the ForeignCardName (might be 0)
-	MultiverseId string `json:"multiverseid"`
+	MultiverseId MultiverseId `json:"multiverseid"`
 }
 
 // Legality stores information about legality notices for a specific format.
@@ -107,7 +107,7 @@ type Card struct {
 	// The card layout. Possible values: normal, split, flip, double-faced, token, plane, scheme, phenomenon, leveler, vanguard
 	Layout string `json:"layout"`
 	// The multiverseid of the card on Wizard’s Gatherer web page. Cards from sets that do not exist on Gatherer will NOT have a multiverseid. Sets not on Gatherer are: ATH, ITP, DKM, RQS, DPA and all sets with a 4 letter code that starts with a lowercase 'p’.
-	MultiverseId string `json:"multiverseid"`
+	MultiverseId MultiverseId `json:"multiverseid"`
 	// If a card has alternate art (for example, 4 different Forests, or the 2 Brothers Yamazaki) then each other variation’s multiverseid will be listed here, NOT including the current card’s multiverseid.
 	Variations []string `json:"variations"`
 	// The image url for a card. Only exists if the card has a multiverse id.
