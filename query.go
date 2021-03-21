@@ -1,6 +1,7 @@
 package mtg
 
 import (
+	"fmt"
 	"net/http"
 	"net/url"
 	"regexp"
@@ -128,10 +129,12 @@ func fetchCards(url string) ([]*Card, http.Header, error) {
 	defer bdy.Close()
 
 	if err := checkError(resp); err != nil {
+		fmt.Println("dhaiuehduaihd ", err)
 		return nil, nil, err
 	}
 	cards, err := decodeCards(bdy)
 	if err != nil {
+		fmt.Println("decode hehehhehe ", err)
 		return nil, nil, err
 	}
 	return cards, resp.Header, nil
