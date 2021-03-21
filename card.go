@@ -184,13 +184,15 @@ func decodeCards(reader io.Reader) ([]*Card, error) {
 	cr := new(cardResponse)
 	fmt.Println("cr  ", cr)
 	decoder := json.NewDecoder(reader)
-	target := make(map[string]interface{})
-	err := decoder.Decode(&target)
-	if err == nil {
-		fmt.Println(target)
-	}
-	err = decoder.Decode(&cr)
+	err := decoder.Decode(&cr)
 	if err != nil {
+		target := make(map[string]interface{})
+		err = decoder.Decode(&target)
+		if err != nil {
+			fmt.Println(err)
+			return nil, err
+		}
+		fmt.Println(target)
 		return nil, err
 	}
 	if cr.Card != nil {
