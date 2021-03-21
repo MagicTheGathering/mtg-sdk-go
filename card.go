@@ -186,6 +186,7 @@ func decodeCards(reader io.Reader) ([]*Card, error) {
 	decoder := json.NewDecoder(reader)
 	err := decoder.Decode(&cr)
 	if err != nil {
+		fmt.Println(err)
 		target := make(map[string]interface{})
 		err = decoder.Decode(&target)
 		if err != nil {
