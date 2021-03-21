@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"reflect"
 	"time"
 
 	"github.com/mitchellh/mapstructure"
@@ -191,6 +192,11 @@ func decodeCards(reader io.Reader) ([]*Card, error) {
 	if err != nil {
 		return nil, err
 	}
+	for k, v := range target {
+		fmt.Println("key: " + k + "value: " + v)
+		fmt.Println(reflect.TypeOf(v).String())
+	}
+
 	err = mapstructure.Decode(target, &cr)
 	if err != nil {
 		fmt.Println("what a hekk", err)
