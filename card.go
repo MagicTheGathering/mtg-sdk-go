@@ -33,7 +33,7 @@ type Id interface {
 }
 
 // MultiverseId which can be used to fetch the card by its id
-type MultiverseId string
+type MultiverseId float64
 
 // CardId which can be used to fetch the card by its id
 type CardId string
