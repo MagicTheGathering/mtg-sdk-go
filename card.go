@@ -191,7 +191,7 @@ func decodeCards(reader io.Reader) ([]*Card, error) {
 	if err != nil {
 		return nil, err
 	}
-	err := mapstructure.Decode(target, &cr)
+	err = mapstructure.Decode(target, &cr)
 	if err != nil {
 		fmt.Println("what a hekk", err)
 		return nil, err
