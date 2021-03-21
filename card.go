@@ -31,7 +31,7 @@ type Id interface {
 }
 
 // MultiverseId which can be used to fetch the card by its id
-type MultiverseId string
+type MultiverseId uint64
 
 // CardId which can be used to fetch the card by its id
 type CardId string
@@ -51,7 +51,7 @@ type ForeignCardName struct {
 	// Language of the ForeignCardName
 	Language string `json:"language"`
 	// MultiverseId of the ForeignCardName (might be 0)
-	MultiverseId int64 `json:"multiverseid"`
+	MultiverseId MultiverseId `json:"multiverseid"`
 }
 
 // Legality stores information about legality notices for a specific format.
