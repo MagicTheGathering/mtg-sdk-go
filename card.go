@@ -31,7 +31,7 @@ type Id interface {
 }
 
 // MultiverseId which can be used to fetch the card by its id
-type MultiverseId uint64
+type MultiverseId string
 
 // CardId which can be used to fetch the card by its id
 type CardId string
