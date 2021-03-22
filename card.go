@@ -227,7 +227,7 @@ func fetchCardById(str string) (*Card, error) {
 }
 
 // Fetch returns the card represented by the MutliverseId
-func (mID string) Fetch() (*Card, error) {
+func (mID MultiverseId) Fetch() (*Card, error) {
 	return fetchCardById(fmt.Sprintf("%d", mID))
 }
 
