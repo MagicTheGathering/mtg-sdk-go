@@ -6,10 +6,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"reflect"
 	"time"
-
-	"github.com/mitchellh/mapstructure"
 )
 
 // Date which can be unmarshalled from json
@@ -34,7 +31,7 @@ type Id interface {
 }
 
 // MultiverseId which can be used to fetch the card by its id
-type MultiverseId float64
+type MultiverseId uint64
 
 // CardId which can be used to fetch the card by its id
 type CardId string
@@ -54,7 +51,7 @@ type ForeignCardName struct {
 	// Language of the ForeignCardName
 	Language string `json:"language"`
 	// MultiverseId of the ForeignCardName (might be 0)
-	MultiverseId MultiverseId `json:"multiverseid"`
+	MultiverseId string `json:"multiverseid"`
 }
 
 // Legality stores information about legality notices for a specific format.
@@ -183,34 +180,12 @@ type cardResponse struct {
 }
 
 func decodeCards(reader io.Reader) ([]*Card, error) {
-	fmt.Println(reader)
 	cr := new(cardResponse)
-	fmt.Println("cr  ", cr)
 	decoder := json.NewDecoder(reader)
-	target := make(map[string]interface{})
-	err := decoder.Decode(&target)
+	err := decoder.Decode(&cr)
 	if err != nil {
 		return nil, err
 	}
-	for _, x := range target["cards"].([]interface{}) {
-		fmt.Println("-------")
-		fmt.Println(x)
-		fmt.Println(reflect.TypeOf(x).String())
-		for k, v := range x.(map[string]interface{}) {
-			fmt.Println("########")
-			fmt.Println(k)
-			fmt.Println(v)
-			fmt.Println(reflect.TypeOf(v).String())
-		}
-
-	}
-
-	err = mapstructure.Decode(target, &cr)
-	if err != nil {
-		fmt.Println("what a hekk", err)
-		return nil, err
-	}
-	fmt.Println("carrrrddsdss ", cr)
 	if cr.Card != nil {
 		return []*Card{cr.Card}, nil
 	}
