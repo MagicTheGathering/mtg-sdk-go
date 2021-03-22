@@ -196,6 +196,12 @@ func decodeCards(reader io.Reader) ([]*Card, error) {
 		fmt.Println("-------")
 		fmt.Println(x)
 		fmt.Println(reflect.TypeOf(x).String())
+		for k, v := range x.(map[string]interface{}) {
+			fmt.Println("########")
+			fmt.Println(k)
+			fmt.Println(v)
+			fmt.Println(reflect.TypeOf(v).String())
+		}
 
 	}
 
