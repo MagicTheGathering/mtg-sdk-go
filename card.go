@@ -192,14 +192,11 @@ func decodeCards(reader io.Reader) ([]*Card, error) {
 	if err != nil {
 		return nil, err
 	}
-	for k, v := range target {
-		fmt.Println("key: " + k)
-		for _, x := range v.([]interface{}) {
-			fmt.Println("-------")
-			fmt.Println(x)
-			fmt.Println(reflect.TypeOf(x).String())
+	for _, x := range target["cards"].([]interface{}) {
+		fmt.Println("-------")
+		fmt.Println(x)
+		fmt.Println(reflect.TypeOf(x).String())
 
-		}
 	}
 
 	err = mapstructure.Decode(target, &cr)
