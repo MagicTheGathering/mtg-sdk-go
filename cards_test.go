@@ -16,7 +16,7 @@ func Test_FetchCards(t *testing.T) {
 		httpmock.RegisterResponder("GET", "https://api.magicthegathering.io/v1/cards/419003",
 			httpmock.NewStringResponder(200, `{"cards":[{"name":"Chandra, Torch of Defiance","manaCost":"{2}{R}{R}","cmc":4.0,"colors":["Red"],"colorIdentity":["R"],"type":"Planeswalker — Chandra","types":["Planeswalker"],"subtypes":["Chandra"],"rarity":"Mythic Rare","set":"KLD","setName":"Kaladesh","text":"+1: Exile the top card of your library. You may cast that card. If you don't, Chandra, Torch of Defiance deals 2 damage to each opponent.\n+1: Add {R}{R} to your mana pool.\n−3: Chandra, Torch of Defiance deals 4 damage to target creature.\n−7: You get an emblem with \"Whenever you cast a spell, this emblem deals 5 damage to target creature or player.\"","artist":"Magali Villeneuve","number":"110","layout":"normal","multiverseid":417683,"imageUrl":"http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=417683&type=card","loyalty":"4","rulings":[{"date":"2016-09-20","text":"An effect that instructs you to \"cast\" a card doesn't allow you to play lands. If the card exiled with Chandra's first ability is a land card, you can't play it and Chandra deals 2 damage to each opponent."},{"date":"2016-09-20","text":"If you cast the exiled card, you do so as part of the resolution of Chandra's ability. You can't wait to cast it later in the turn. Timing permissions based on the card's type are ignored, but other restrictions (such as \"Cast [this card] only during combat\") are not."},{"date":"2016-09-20","text":"You pay the costs for the exiled card if you cast it. You may pay alternative costs such as emerge rather than the card's mana cost."},{"date":"2016-09-20","text":"Loyalty abilities can't be mana abilities. Chandra's second ability uses the stack and can be countered or otherwise responded to. Like all loyalty abilities, it can be activated only once per turn, during your main phase, when the stack is empty, and only if no other loyalty abilities of the planeswalker have been activated this turn."},{"date":"2016-09-20","text":"The emblem created by Chandra's last ability is colorless. The damage it deals is from a colorless source."},{"date":"2016-09-20","text":"Chandra's emblem's ability resolves before the spell that caused it to trigger."},{"date":"2016-09-20","text":"In a Two-Headed Giant game, Chandra's first ability causes 4 damage total to be dealt to the opposing team."}],"foreignNames":[{"name":"反抗烈炬茜卓","imageUrl":"http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=417947&type=card","language":"Chinese Simplified","multiverseid":417947},{"name":"反抗烈炬茜卓","imageUrl":"http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=418211&type=card","language":"Chinese Traditional","multiverseid":418211},{"name":"Chandra, torche de la défiance","imageUrl":"http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=418739&type=card","language":"French","multiverseid":418739},{"name":"Chandra, Fackel des Widerstands","imageUrl":"http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=418475&type=card","language":"German","multiverseid":418475},{"name":"Chandra, Fiamma di Sfida","imageUrl":"http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=419003&type=card","language":"Italian","multiverseid":419003},{"name":"反逆の先導者、チャンドラ","imageUrl":"http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=419267&type=card","language":"Japanese","multiverseid":419267},{"name":"저항의 횃불 찬드라","imageUrl":"http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=419531&type=card","language":"Korean","multiverseid":419531},{"name":"Chandra, Chama da Rebeldia","imageUrl":"http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=419795&type=card","language":"Portuguese (Brazil)","multiverseid":419795},{"name":"Чандра, Факел Непокорности","imageUrl":"http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=420059&type=card","language":"Russian","multiverseid":420059},{"name":"Chandra, aurora de la rebeldía","imageUrl":"http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=420323&type=card","language":"Spanish","multiverseid":420323}],"printings":["KLD"],"originalText":"+1: Exile the top card of your library. You may cast that card. If you don't, Chandra, Torch of Defiance deals 2 damage to each opponent.\n+1: Add {R}{R} to your mana pool.\n−3: Chandra, Torch of Defiance deals 4 damage to target creature.\n−7: You get an emblem with \"Whenever you cast a spell, this emblem deals 5 damage to target creature or player.\"","originalType":"Planeswalker — Chandra","legalities":[{"format":"Commander","legality":"Legal"},{"format":"Kaladesh Block","legality":"Legal"},{"format":"Legacy","legality":"Legal"},{"format":"Modern","legality":"Legal"},{"format":"Standard","legality":"Legal"},{"format":"Vintage","legality":"Legal"}],"id":"0ef97e4324dbdcc0eaedda8f4301f68f3567d2ca"}]}`))
 
-		card, err := MultiverseId(419003).Fetch()
+		card, err := MultiverseId("419003").Fetch()
 
 		So(err, ShouldBeNil)
 		So(card, ShouldNotBeNil)
@@ -44,7 +44,7 @@ func Test_FetchCards(t *testing.T) {
 			httpmock.NewStringResponder(500, ``))
 
 		Convey("Fetching a MultiverseId", func() {
-			card, err := MultiverseId(417594).Fetch()
+			card, err := MultiverseId("417594").Fetch()
 
 			So(card, ShouldNotBeNil)
 			So(err, ShouldBeNil)
@@ -58,7 +58,7 @@ func Test_FetchCards(t *testing.T) {
 		})
 
 		Convey("Fetching an invalid MultiverseId", func() {
-			card, err := MultiverseId(0).Fetch()
+			card, err := MultiverseId("0").Fetch()
 			So(card, ShouldBeNil)
 			So(err, ShouldNotBeNil)
 
@@ -75,7 +75,7 @@ func Test_FetchCards(t *testing.T) {
 			So(card, ShouldBeNil)
 			So(err, ShouldNotBeNil)
 
-			card, err = MultiverseId(1).Fetch()
+			card, err = MultiverseId("1").Fetch()
 			So(card, ShouldBeNil)
 			So(err, ShouldNotBeNil)
 
