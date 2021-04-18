@@ -15,4 +15,4 @@ Just run
 
 ## Docs
 
-See [GoDoc](https://godoc.org/github.com/MagicTheGathering/mtg-sdk-go)
+See [GoDoc](https://godoc.org/github.com/josofm/mtg-sdk-go)
