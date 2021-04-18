@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	. "github.com/smartystreets/goconvey/convey"
-	"gopkg.in/jarcoal/httpmock.v1"
+	"gopkg.in/jarcoal/httpmock"
 )
 
 func Test_Querys(t *testing.T) {
